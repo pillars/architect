@@ -1,5 +1,26 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+# Folder view configuration files
+.DS_Store
+Desktop.ini
+
+# Thumbnail cache files
+._*
+Thumbs.db
+
+# Files that might appear on external disks
+.Spotlight-V100
+.Trashes
+
+# mount files
+.apdisk
+.fseventsd
+
+# Editor files
+*.sublime-*
+*.swp
+.c9
+
 # compiled output
 /dist
 /tmp
