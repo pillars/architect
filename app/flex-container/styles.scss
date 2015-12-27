@@ -1,0 +1,25 @@
+& {
+  background: #eee;
+
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 300px;
+}
+
+.flex-container {
+  display: flex;
+  height: 100%;
+
+  &.flex-scrollable {
+    overflow: auto;
+  }
+
+  &.flex-rows {
+    flex-direction: column;
+  }
+
+  &.flex-cols {
+    flex-direction: row;
+  }
+}

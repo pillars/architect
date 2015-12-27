@@ -1,0 +1,26 @@
+<h2>Flex container</h2>
+
+{{#if flexContainer.direction}}
+  <p>
+    Scrollable?
+    {{input type="checkbox" checked=isScrollable}}
+  </p>
+  <p>
+    Width:
+    {{input value=flexContainer.width}}
+  </p>
+
+  <button class="button-corner" {{action "addItem"}}>Add an item</button>
+
+  <div class="flex-container {{layoutClassName}}">
+    {{#each flexContainer.items as |flexItem|}}
+      {{flex-item flexItem=flexItem}}
+    {{/each}}
+  </div>
+{{else}}
+  <p>
+    Add
+    <button {{action "setDirection" "row"}}>rows</button> or
+    <button {{action "setDirection" "col"}}>columns</button>
+  </p>
+{{/if}}
