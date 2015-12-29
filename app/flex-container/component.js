@@ -2,8 +2,17 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   store: Ember.inject.service(),
-
   attributeBindings: ['style'],
+
+  didInsertElement() {
+    this.setRenderedDimensions();
+    Ember.$(window).on('resize', this.setRenderedDimensions.bind(this));
+  },
+
+  willDestroyElement() {
+    Ember.$(window).off('resize', this.setRenderedDimensions.bind(this));
+  },
+
   style: Ember.computed(
     'flexContainer.width',
     function () {
@@ -35,6 +44,9 @@ export default Ember.Component.extend({
     }
   ),
 
+  // Scroll
+  // ===================
+
   isScrollable: Ember.computed(
     'flexContainer.overflow',
     {
@@ -48,6 +60,36 @@ export default Ember.Component.extend({
       }
     }
   ),
+
+  resetScroll: Ember.observer(
+    'flexContainer.overflow',
+    function () {
+      if (this.get('flexContainer.overflow') === 'hidden') {
+        this.$('.flex-container').scrollTop(0).scrollLeft(0);
+      }
+    }
+  ),
+
+  // Rendered Dimensions
+  // ===================
+
+  dimensionsChanged: Ember.observer(
+    'flexContainer.width',
+    function () {
+      this.setRenderedDimensions()
+    }
+  ),
+
+  setRenderedDimensions() {
+    const $el = this.$('.flex-container');
+    // We delay the mesuring to leave enough time to the DOM to render - KL
+    Ember.run.later(() => {
+      this.setProperties({
+        'flexContainer.renderedDimensions.width'  : $el.outerWidth(),
+        'flexContainer.renderedDimensions.height' : $el.outerHeight()
+      });
+    }, 30);
+  },
 
   actions: {
     setDirection(direction) {

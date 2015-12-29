@@ -9,6 +9,11 @@
 - A `flexContent` is a div in which you can input content: text, images, or
 whatever you feel like.
 
+## Dimensions
+
+- `usedSpace`: The space used by fixed elements.
+- `freeSpace`: The available space in a container.
+
 ## Known limitations
 
 Models for `flexContainer` and `flexItem` have information both about how they

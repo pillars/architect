@@ -3,4 +3,9 @@
   {{input value=flexItem.width}}
 </div>
 
+<ul>
+  <li>Rendered Width: {{flexItem.renderedDimensions.width}}</li>
+  <li>Fixed Width: {{flexItem.hasFixedWidth}}</li>
+</ul>
+
 <button class="button-corner" {{action "delete"}}>Delete</button>

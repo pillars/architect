@@ -10,13 +10,21 @@
     {{input value=flexContainer.width}}
   </p>
 
-  <button class="button-corner" {{action "addItem"}}>Add an item</button>
+  <ul>
+    <li>Rendered Width: {{flexContainer.renderedDimensions.width}}</li>
+    <li>Used Space: {{flexContainer.renderedSpacing.usedSpace}}</li>
+    <li>Free Space: {{flexContainer.renderedSpacing.freeSpace}}</li>
+  </ul>
 
-  <div class="flex-container {{layoutClassName}}">
-    {{#each flexContainer.items as |flexItem|}}
-      {{flex-item flexItem=flexItem}}
-    {{/each}}
-  </div>
+  {{#unless flexContainer.hasFreeSpace}}
+    <p class="error">
+      At least one of your column(s) is partially hidden. This happens because
+      your columns span wider than the available space. You can easily
+      debug this by making the container scrollable and adjusting the columns.
+    </p>
+  {{/unless}}
+
+  <button class="button-corner" {{action "addItem"}}>Add an item</button>
 {{else}}
   <p>
     Add
@@ -24,3 +32,11 @@
     <button {{action "setDirection" "col"}}>columns</button>
   </p>
 {{/if}}
+
+<div class="flex-container {{layoutClassName}}">
+  {{#each flexContainer.flexItems as |flexItem|}}
+    {{flex-item
+      flexItem=flexItem
+    }}
+  {{/each}}
+</div>
