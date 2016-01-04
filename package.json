@@ -20,6 +20,8 @@
   "license": "MIT",
   "devDependencies": {
     "broccoli-asset-rev": "^2.2.0",
+    "element-resize-detector": "^1.0.3",
+    "ember-browserify": "^1.1.4",
     "ember-cli": "1.13.12",
     "ember-cli-app-version": "^1.0.0",
     "ember-cli-babel": "^5.1.5",

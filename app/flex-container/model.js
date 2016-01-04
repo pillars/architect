@@ -4,43 +4,59 @@ import Ember from 'ember';
 
 export default DS.Model.extend({
   // Attributes
-  direction          : DS.attr('string'),
-  overflow           : DS.attr('string'),
-  width              : DS.attr('string', {defaultValue: '100%'}),
-  renderedSpacing    : MF.fragment('rendered-spacing', {defaultValue: {}}),
-  renderedDimensions : MF.fragment('rendered-dimensions', {defaultValue: {}}),
+  direction       : DS.attr('string'),
+  overflow        : DS.attr('string'),
+  width           : DS.attr('string', {defaultValue: '100%'}),
+  dimensions      : MF.fragment('container-dimensions', {defaultValue: {}}),
 
   // Relations
-  flexItems          : DS.hasMany('flex-item', {async: false}),
+  flexItems       : DS.hasMany('flex-item', {async: false}),
 
   isScrollable: Ember.computed.equal('overflow', 'scroll'),
 
   hasFreeSpace: Ember.computed(
-    'renderedSpacing.freeSpace',
+    'dimensions.freeSpace',
     function () {
-      const freeSpace = this.get('renderedSpacing.freeSpace');
+      const freeSpace = this.get('dimensions.freeSpace');
       return !freeSpace || freeSpace > 0;
     }
   ),
 
-  spacingChanged: Ember.observer(
-    'renderedDimensions.width',
+  dimensionsChanged: Ember.observer(
+    'dimensions.width',
+    'dimensions.height',
     'flexItems.@each.hasFixedWidth',
-    'flexItems.@each.renderedDimensions.width',
-    'flexItems.@each.renderedDimensions.height',
+    'flexItems.@each.dimensions.width',
+    'flexItems.@each.dimensions.height',
     function () {
-      Ember.run.cancel(this.get('spacingChangedTimer'));
+      Ember.run.cancel(this.get('dimensionsTimer'));
       const timer = Ember.run.later(() => {
-        const usedSpace     = this.getFixedSpace();
-        const renderedWidth = this.get('renderedDimensions.width');
+        const usedSpace  = this.getFixedSpace();
+        const freeSpace  = this.get('dimensions.width') - usedSpace;
+        const totalWidth = this.getTotalItemsWidth();
         this.setProperties({
-          'renderedSpacing.usedSpace' : usedSpace,
-          'renderedSpacing.freeSpace' : renderedWidth - usedSpace
+          'dimensions.usedSpace'       : usedSpace,
+          'dimensions.freeSpace'       : freeSpace,
+          'dimensions.totalItemsWidth' : totalWidth
         });
-      }, 50);
-      this.set('spacingChangedTimer', timer);
+        Ember.Logger.log(
+          '[flexContainer] Set spacing',
+          {usedSpace, freeSpace, totalWidth}
+        );
+      }, 300);
+      this.set('dimensionsTimer', timer);
     }
   ),
+
+  getTotalItemsWidth() {
+    return (
+      this
+        .get('flexItems')
+        .getEach('dimensions.width')
+        .reject((width) => !width)
+        .reduce((sum, width) => sum + parseInt(width, 10), 0)
+    );
+  },
 
   getFixedSpace() {
     return (

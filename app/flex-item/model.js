@@ -4,11 +4,11 @@ import Ember from 'ember';
 
 export default DS.Model.extend({
   // Attributes
-  width              : DS.attr('string'),
-  renderedDimensions : MF.fragment('rendered-dimensions', {defaultValue: {}}),
+  width         : DS.attr('string'),
+  dimensions    : MF.fragment('computed-dimensions', {defaultValue: {}}),
 
   // Relations
-  flexContainer      : DS.belongsTo('flex-container'),
+  flexContainer : DS.belongsTo('flex-container', {async: false}),
 
   // Computed properties
   siblings: Ember.computed.alias('flexContainer.flexItems'),

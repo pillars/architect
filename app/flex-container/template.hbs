@@ -11,9 +11,10 @@
   </p>
 
   <ul>
-    <li>Rendered Width: {{flexContainer.renderedDimensions.width}}</li>
-    <li>Used Space: {{flexContainer.renderedSpacing.usedSpace}}</li>
-    <li>Free Space: {{flexContainer.renderedSpacing.freeSpace}}</li>
+    <li>Rendered Width: {{flexContainer.dimensions.width}}</li>
+    <li>Items Rendered Width: {{flexContainer.dimensions.totalItemsWidth}}</li>
+    <li>Used Space: {{flexContainer.dimensions.usedSpace}}</li>
+    <li>Free Space: {{flexContainer.dimensions.freeSpace}}</li>
   </ul>
 
   {{#unless flexContainer.hasFreeSpace}}

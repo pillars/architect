@@ -2,22 +2,28 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   store: Ember.inject.service(),
+  resizer: Ember.inject.service(),
+
   attributeBindings: ['style'],
 
   didInsertElement() {
-    this.setRenderedDimensions();
-    Ember.$(window).on('resize', this.setRenderedDimensions.bind(this));
+    this.get('resizer').add(
+      this.element,
+      this.setRenderedDimensions.bind(this)
+    );
   },
 
-  willDestroyElement() {
-    Ember.$(window).off('resize', this.setRenderedDimensions.bind(this));
+  willRemoveElement() {
+    this.get('resizer').removeAllListeners(this.element);
   },
 
   style: Ember.computed(
     'flexContainer.width',
     function () {
       const width = this.get('flexContainer.width');
-      return `width: ${width};`;
+      // TODO Escape CSS width - KL
+      // let value = Ember.Handlebars.Utils.escapeExpression(params[0]);
+      return Ember.String.htmlSafe(`width: ${width};`);
     }
   ),
 
@@ -73,22 +79,15 @@ export default Ember.Component.extend({
   // Rendered Dimensions
   // ===================
 
-  dimensionsChanged: Ember.observer(
-    'flexContainer.width',
-    function () {
-      this.setRenderedDimensions()
-    }
-  ),
-
   setRenderedDimensions() {
-    const $el = this.$('.flex-container');
-    // We delay the mesuring to leave enough time to the DOM to render - KL
-    Ember.run.later(() => {
-      this.setProperties({
-        'flexContainer.renderedDimensions.width'  : $el.outerWidth(),
-        'flexContainer.renderedDimensions.height' : $el.outerHeight()
-      });
-    }, 30);
+    const $el    = this.$('.flex-container');
+    const width  = $el.outerWidth();
+    const height = $el.outerHeight();
+    this.setProperties({
+      'flexContainer.dimensions.width'  : width,
+      'flexContainer.dimensions.height' : height
+    });
+    Ember.Logger.log('[flexContainer] Set dimensions', {width, height});
   },
 
   actions: {
