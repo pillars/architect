@@ -1,0 +1,17 @@
+& {
+  padding: 24px;
+}
+
+.flex-preview-container {
+  background: red;
+  width: 10px;
+  height: 10px;
+}
+
+.flex-preview-items {
+  & > div {
+    border: 2px solid #666;
+    background: #FFF;
+    height: 100px;
+  }
+}

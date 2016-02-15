@@ -1,0 +1,12 @@
+<div class="flex-preview-items">
+  {{#each flexContainer.flexItems as |flexItem|}}
+    {{component
+      "flex-preview/item"
+      flexItem=flexItem
+    }}
+  {{/each}}
+</div>
+
+<div class="flex-preview-container">
+  
+</div>
